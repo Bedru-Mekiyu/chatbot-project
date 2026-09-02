@@ -1,0 +1,40 @@
+name: CI Workflow
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  validate:
+    name: Validate Web Application Structure & Health
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate HTML Entrypoint
+        run: |
+          if [ ! -f index.html ]; then
+            echo "Error: index.html entrypoint missing!"
+            exit 1
+          fi
+          echo "index.html exists."
+
+      - name: Validate Required Static Assets
+        run: |
+          for file in index.html README.md assets/index-CZGIrnRX.js assets/index-Bw3neSCD.css; do
+            if [ ! -f "$file" ]; then
+              echo "Error: Missing required file $file"
+              exit 1
+            fi
+            echo "Verified: $file"
+          done
+
+      - name: Verify HTML Resource References
+        run: |
+          grep -q 'assets/index-CZGIrnRX.js' index.html || { echo "Error: Missing script bundle reference in index.html"; exit 1; }
+          grep -q 'assets/index-Bw3neSCD.css' index.html || { echo "Error: Missing CSS reference in index.html"; exit 1; }
+          echo "All script and stylesheet links verified in index.html."
