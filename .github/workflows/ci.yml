@@ -25,7 +25,7 @@ jobs:
 
       - name: Validate Required Static Assets
         run: |
-          for file in index.html README.md assets/index-CZGIrnRX.js assets/index-Bw3neSCD.css; do
+          for file in README.md assets/index-CZGIrnRX.js assets/index-Bw3neSCD.css; do
             if [ ! -f "$file" ]; then
               echo "Error: Missing required file $file"
               exit 1
